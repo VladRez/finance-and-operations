@@ -44,14 +44,14 @@ Public Sub DocToExcelList()
     Dim lChar           As Long
     Dim sMainContent    As String
     '----------------------------------------------------
-    'Removes invisible non-ascii characters
+    'Removes invisible non-ascii characters 
     '----------------------------------------------------
         sMainContent = RegExReplace(CStr(ActiveDocument.StoryRanges.Item(wdMainTextStory)), _
                                     sRegExPattern, sBlank)
     
         For lChar = 1 To Len(sMainContent)
     '------------------------------------------------------
-    'Build new words/sentences usnig char(13) as terminator
+    'Build new word/sentence using char(13) as terminator
     '------------------------------------------------------
             If Mid(sMainContent, lChar, 1) = vbCr Then
                 If Len(sNewContent) < 2 Then GoTo next_item:
