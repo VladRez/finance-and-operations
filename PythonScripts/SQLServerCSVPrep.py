@@ -1,6 +1,7 @@
 """
 Remove commas between quotes to avoid truncating strings
  when importing into SQL server table.
+ Example "Apple, Inc" -> "Apple Inc"
 """
 
 import re
