@@ -1,8 +1,37 @@
+' ==========================================================================
+' Module      : MSqlEngine
+' Type        : Module
+' Description : Run a SQL query against activeworksheet(s) and create a table
+'               with the results in a new Worksheet.
+' --------------------------------------------------------------------------
+' Procedures  : SQLEngine
+' --------------------------------------------------------------------------
+' Functions   : CreateWorksheet            Returns worksheet object
+' --------------------------------------------------------------------------
+' References  : ADODB.Connection
+'               ADODB.Recordset
+' --------------------------------------------------------------------------
+' Comments    : Convert module to class if running queries in batches.
+'               Avoid hard coding queries.
+'               MS Access (JET) SQL Syntax required.
+' ==========================================================================
+
+' -----------------------------------
+' Option statements
+' -----------------------------------
+
+Public sub RunTest()
+end sub
+
 Public Sub SQLEngine(ByVal strExpression As String, _
-Optional ByVal sWksName As String, Optional sWksTblName As String, Optional ByVal reportType As enuReportTemplate)
-If sWksName = "" Then sWksName = "GENERIC_" & Int((Format(Now, "SS") + 1) * Rnd + 1000)
-If sWksTblName = "" Then sWksTblName = "GENERIC_" & Int((Format(Now, "SS") + 1) * Rnd + 1000)
-strExpression = QueryStringBuilder(strExpression)
+            Optional ByVal sWksName As String, _
+            Optional ByVal sWksTblName As String, _
+            Optional ByVal reportType As enuReportTemplate)
+
+    If sWksName = "" Then sWksName = "GENERIC_" & Int((Format(Now, "SS") + 1) * Rnd + 1000)
+    If sWksTblName = "" Then sWksTblName = "GENERIC_" & Int((Format(Now, "SS") + 1) * Rnd + 1000)
+
+    strExpression = QueryStringBuilder(strExpression)
 
 Dim oConnection As Object
 Dim oRecordSet As Object
@@ -13,15 +42,16 @@ Set oConnection = CreateObject("ADODB.Connection")
 Set oRecordSet = CreateObject("ADODB.Recordset")
 
 Dim sConnectionType As String
-sConnectionType = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & ActiveWorkbook.FullName _
-                & ";Extended Properties=""Excel 12.0;HDR=Yes;IMEX=1"";"
-On Err GoTo errhandler:
+    sConnectionType = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & ActiveWorkbook.FullName _
+                   & ";Extended Properties=""Excel 12.0;HDR=Yes;IMEX=1"";"
+
+    On Err GoTo errhandler:
 oConnection.Open sConnectionType
-On Error GoTo errhandler:
+    On Error GoTo errhandler:
 oRecordSet.Open strExpression, oConnection
 
     If oRecordSet.EOF Then
-    ufSqlParser.tbSQLLog.Text = "Unable to Query Data: EOF"
+        ufSqlParser.tbSQLLog.Text = "Unable to Query Data: EOF"
     Exit Sub
     
     Else
@@ -36,10 +66,9 @@ oRecordSet.Open strExpression, oConnection
     
         For iColumnIndex = 0 To oRecordSet.Fields.Count - 1
         
-        wks.Cells(1, iColumnIndex + 1) = _
-        oRecordSet.Fields(iColumnIndex).Name
+        wks.Cells(1, iColumnIndex + 1) = oRecordSet.Fields(iColumnIndex).Name
         
-       FormatABColumn oRecordSet.Fields(iColumnIndex).Name, wks, iColumnIndex + 1
+        'FormatABColumn oRecordSet.Fields(iColumnIndex).Name, wks, iColumnIndex + 1
         
         Next
         wks.Range("A2").CopyFromRecordset oRecordSet
