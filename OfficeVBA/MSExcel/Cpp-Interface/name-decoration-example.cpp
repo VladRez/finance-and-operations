@@ -1,5 +1,6 @@
 
-/*print function name decoration(mangled) in windows*/
+/*Example function showing how 
+Windows decorates(mangles) function names.*/
 
 extern "C" void examplefunction(double arg1);
 
