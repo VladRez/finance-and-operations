@@ -1,2 +1,2 @@
-##Finance and Operations
-Experimental automation and analysis tools
+# Finance and Operations
+Experimental automation, analysis and stand alone applications for finance/ day to day operations.
